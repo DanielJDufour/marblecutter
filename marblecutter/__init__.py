@@ -145,7 +145,10 @@ def get_resolution_in_meters(bounds, dims):
 
 def get_source(path):
     """Cached source opening."""
-    with rasterio.Env():
+    # mjh: setting GDAL_DISABLE_READDIR_ON_OPEN='EMPTY_DIR' prevents
+    #      a bunch of failed requests for (non-existent) .aux and .aux.xml 
+    #      sidecar files
+    with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN='EMPTY_DIR'):
         return rasterio.open(path)
 
 
