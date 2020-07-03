@@ -25,13 +25,13 @@ Source = namedtuple(
         "filename",
         "min_zoom",
         "max_zoom",
-        "expr"
+        "expr",
+        "window_data"
     ],
 )
 Source.__new__.__defaults__ = (
-    {}, {}, {}, None, None, None, None, None, None, None, None, None, None
+    {}, {}, {}, None, None, None, None, None, None, None, None, None, None, None
 )
-
 
 def make_colormap(colormap):
     lut = None

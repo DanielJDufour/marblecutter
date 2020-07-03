@@ -239,7 +239,8 @@ def postprocess(windows):
 
     windows = list(filter(None, windows))
 
-    landsat_windows = filter(lambda sw: "LC08_" in sw[0].url, windows)
+    # wrap url in str because url could be None
+    landsat_windows = filter(lambda sw: "LC08_" in str(sw[0].url), windows)
     landsat_windows = dict(
         [
             (k, list(v))

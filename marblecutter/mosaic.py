@@ -13,7 +13,7 @@ from . import recipes
 from .utils import Bounds, PixelCollection
 
 LOG = logging.getLogger(__name__)
-
+MAX_WORKERS = multiprocessing.cpu_count() * 5
 
 def composite(sources, bounds, shape, target_crs, expand):
     """Composite data from sources into a single raster covering bounds, but in
@@ -33,6 +33,8 @@ def composite(sources, bounds, shape, target_crs, expand):
     sources = recipes.preprocess(sources, resolution=resolution)
 
     def _read_window(source):
+        if hasattr(source, "window_data") and source.window_data is not None:
+            return (source, source.window_data)
         with get_source(source.url) as src:
             LOG.info(
                 "Fetching %s (%s) as band %s",
@@ -82,7 +84,7 @@ def composite(sources, bounds, shape, target_crs, expand):
 
     # iterate over available sources, sorted by decreasing "quality"
     with futures.ThreadPoolExecutor(
-        max_workers=multiprocessing.cpu_count() * 5
+        max_workers=MAX_WORKERS
     ) as executor:
         ws = executor.map(_read_window, sources)
 
